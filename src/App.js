@@ -13,7 +13,7 @@ import AdminDashBoard from './componments/adminTemplate'
 import AdminHeader from './componments/AdminHeader'
 
 function App() {
-  const [userRole,setRole] = useState("user")
+  const [userRole,setRole] = useState("admin")
   return (
     <UserProvider value = "Ali">
     <div className="App">

@@ -1,91 +1,202 @@
-import React from 'react'
+/*!
 
-function AdminHeader(){
- return(
-   
-<div classNames="sidebar">
-    <div classNames="sidebar-wrapper">
-        <div classNames="logo">
-            <a href="#" classNames="simple-text logo-mini">BD</a>
-            <a href="#" classNames="simple-text logo-normal">Black Dashboard</a>
+=========================================================
+* Light Bootstrap Dashboard React - v1.3.0
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/light-bootstrap-dashboard-react
+* Copyright 2019 Creative Tim (https://www.creative-tim.com)
+* Licensed under MIT (https://github.com/creativetimofficial/light-bootstrap-dashboard-react/blob/master/LICENSE.md)
+
+* Coded by Creative Tim
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+*/
+import React, { Component } from "react";
+import { Route, Switch } from "react-router-dom";
+import NotificationSystem from "react-notification-system";
+
+import AdminNavbar from "./Navbars/AdminNavbar";
+import Footer from "./Footer/Footer";
+import Sidebar from "./Sidebar/Sidebar";
+import FixedPlugin from ".//FixedPlugin/FixedPlugin.jsx";
+
+import { style } from "./variables/Variables.jsx";
+
+import routes from "./routes.js";
+
+import image from "./img/sidebar-3.jpg";
+
+class Admin extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      _notificationSystem: null,
+      image: image,
+      color: "black",
+      hasImage: true,
+      fixedClasses: "dropdown show-dropdown open"
+    };
+  }
+  handleNotificationClick = position => {
+    var color = Math.floor(Math.random() * 4 + 1);
+    var level;
+    switch (color) {
+      case 1:
+        level = "success";
+        break;
+      case 2:
+        level = "warning";
+        break;
+      case 3:
+        level = "error";
+        break;
+      case 4:
+        level = "info";
+        break;
+      default:
+        break;
+    }
+    this.state._notificationSystem.addNotification({
+      title: <span data-notify="icon" className="pe-7s-gift" />,
+      message: (
+        <div>
+          Welcome to <b>Light Bootstrap Dashboard</b> - a beautiful freebie for
+          every web developer.
         </div>
-        <ul class="nav">
-            {/* <li @if ($pageSlug ?? '' == 'dashboard') classNames="active " @endif> */}
-{/* // {{--                <a href="{{ route('home') }}">--}} */}
-                    <i class="tim-icons icon-chart-pie-36"></i>
-                    <p>Dashboard</p>
-                {/* </a> */}
-            {/* </li> */}
-            <li>
-                <a data-toggle="collapse" href="#laravel-examples" aria-expanded="true">
-                    <i class="fab fa-laravel" ></i>
-                    <span class="nav-link-text" >Laravel Examples</span>
-                    <b class="caret mt-1"></b>
-                </a>
-
-                <div class="collapse show" id="laravel-examples">
-                    <ul class="nav pl-4">
-                        {/* <li @if ($pageSlug ?? '' == 'profile') class="active " @endif> */}
-{/* {{--                            <a href="{{ route('profile.edit')  }}">--}} */}
-                                <i class="tim-icons icon-single-02"></i>
-                                <p>User Profile</p>
-                            {/* </a>
-                        </li> */}
-                        {/* <li @if ($pageSlug ?? '' == 'users') class="active " @endif>
-{{--                            <a href="{{ route('user.index')  }}">--}} */}
-                                <i class="tim-icons icon-bullet-list-67"></i>
-                                <p>User Management</p>
-                            {/* </a>
-                        </li> */}
-                    </ul>
-                </div>
-            </li>
-            {/* <li @if ($pageSlug ?? '' == 'icons') class="active " @endif>
-{{--                <a href="{{ route('pages.icons') }}">--}} */}
-                    <i class="tim-icons icon-atom"></i>
-                    <p>Icons</p>
-                {/* </a>
-            </li> */}
-            {/* <li @if ($pageSlug ?? '' == 'maps') class="active " @endif>
-{{--                <a href="{{ route('pages.maps') }}">--}} */}
-                    <i class="tim-icons icon-pin"></i>
-                    <p>Maps</p>
-                {/* </a>
-            </li> */}
-            {/* {/* <li @if ($pageSlug ?? '' == 'notifications') class="active " @endif>
-{{--                <a href="{{ route('pages.notifications') }}">--}}
-                    <i class="tim-icons icon-bell-55"></i>
-                    <p>{{ __('Notifications') }}</p>
-                </a>
-            </li>
-            <li @if ($pageSlug ?? '' == 'users') class="active " @endif>
-                <a href="{{ route('users') }}">
-                    <i class="tim-icons icon-puzzle-10"></i>
-                    <p>{{ __('Users') }}</p>
-                </a>
-            </li>
-            <li @if ($pageSlug ?? '' == 'typography') class="active " @endif>
-{{--                <a href="{{ route('pages.typography') }}">--}}
-                    <i class="tim-icons icon-align-center"></i>
-                    <p>{{ __('Typography') }}</p>
-                </a>
-            </li>
-            <li @if ($pageSlug ?? '' == 'rtl') class="active " @endif>
-{{--                <a href="{{ route('pages.rtl') }}">--}}
-                    <i class="tim-icons icon-world"></i>
-                    <p>{{ __('RTL Support') }}</p>
-                </a>
-            </li>
-            <li class=" {{ $pageSlug ?? '' == 'upgrade' ? 'active' : '' }} bg-info">
-{{--                <a href="{{ route('pages.upgrade') }}">--}}
-                    <i class="tim-icons icon-spaceship"></i>
-                    <p>{{ __('Upgrade to PRO') }}</p>
-                </a>
-            </li> */}
-      </ul>
-    </div>
-    </div>
-
- )
+      ),
+      level: level,
+      position: position,
+      autoDismiss: 15
+    });
+  };
+  getRoutes = routes => {
+    return routes.map((prop, key) => {
+      if (prop.layout === "/admin") {
+        return (
+          <Route
+            path={prop.layout + prop.path}
+            render={props => (
+              <prop.component
+                {...props}
+                handleClick={this.handleNotificationClick}
+              />
+            )}
+            key={key}
+          />
+        );
+      } else {
+        return null;
+      }
+    });
+  };
+  getBrandText = path => {
+    for (let i = 0; i < routes.length; i++) {
+      if (
+        this.props.location.pathname.indexOf(
+          routes[i].layout + routes[i].path
+        ) !== -1
+      ) {
+        return routes[i].name;
+      }
+    }
+    return "Brand";
+  };
+  handleImageClick = image => {
+    this.setState({ image: image });
+  };
+  handleColorClick = color => {
+    this.setState({ color: color });
+  };
+  handleHasImage = hasImage => {
+    this.setState({ hasImage: hasImage });
+  };
+  handleFixedClick = () => {
+    if (this.state.fixedClasses === "dropdown") {
+      this.setState({ fixedClasses: "dropdown show-dropdown open" });
+    } else {
+      this.setState({ fixedClasses: "dropdown" });
+    }
+  };
+  componentDidMount() {
+    this.setState({ _notificationSystem: this.refs.notificationSystem });
+    var _notificationSystem = this.refs.notificationSystem;
+    var color = Math.floor(Math.random() * 4 + 1);
+    var level;
+    switch (color) {
+      case 1:
+        level = "success";
+        break;
+      case 2:
+        level = "warning";
+        break;
+      case 3:
+        level = "error";
+        break;
+      case 4:
+        level = "info";
+        break;
+      default:
+        break;
+    }
+    _notificationSystem.addNotification({
+      title: <span data-notify="icon" className="pe-7s-gift" />,
+      message: (
+        <div>
+          Welcome to <b>Light Bootstrap Dashboard</b> - a beautiful freebie for
+          every web developer.
+        </div>
+      ),
+      level: level,
+      position: "tr",
+      autoDismiss: 15
+    });
+  }
+  componentDidUpdate(e) {
+    if (
+      window.innerWidth < 993 &&
+      e.history.location.pathname !== e.location.pathname &&
+      document.documentElement.className.indexOf("nav-open") !== -1
+    ) {
+      document.documentElement.classList.toggle("nav-open");
+    }
+    if (e.history.action === "PUSH") {
+      document.documentElement.scrollTop = 0;
+      document.scrollingElement.scrollTop = 0;
+      this.refs.mainPanel.scrollTop = 0;
+    }
+  }
+  render() {
+    return (
+      <div className="wrapper">
+        <NotificationSystem ref="notificationSystem" style={style} />
+        <Sidebar {...this.props} routes={routes} image={this.state.image}
+        color={this.state.color}
+        hasImage={this.state.hasImage}/>
+        <div id="main-panel" className="main-panel" ref="mainPanel">
+          <AdminNavbar
+            {...this.props}
+            brandText={this.getBrandText(this.props.location.pathname)}
+          />
+          <Switch>{this.getRoutes(routes)}</Switch>
+          <Footer />
+          <FixedPlugin
+            handleImageClick={this.handleImageClick}
+            handleColorClick={this.handleColorClick}
+            handleHasImage={this.handleHasImage}
+            bgColor={this.state["color"]}
+            bgImage={this.state["image"]}
+            mini={this.state["mini"]}
+            handleFixedClick={this.handleFixedClick}
+            fixedClasses={this.state.fixedClasses}
+          />
+        </div>
+      </div>
+    );
+  }
 }
-export default AdminHeader
+
+export default Admin;
